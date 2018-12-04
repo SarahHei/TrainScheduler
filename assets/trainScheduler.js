@@ -68,26 +68,21 @@ database.ref().on("child_added", function(childSnapshot, prevChildKey) {
 // moment.js is how we convert times in this assignment
 
 //from Chris Mendoza
-var firstTrain = moment($("#formFirstTrainTime").val().trim(), "hh:mm").format("X");
+  var firstTrain = moment($("#formFirstTrainTime").val().trim(), "hh:mm").format("X");
   var timeArr = firstTrain.split(":");
   var trainTime = moment().hours(timeArr[0]).minutes(timeArr[1]);
   var maxMoment = moment.max(moment(), firstTrainTime);
   var tMinutes;
   var tArrival;
 
-  // If the first train is later than the current time, sent arrival to the first train time
   if (maxMoment === trainTime) {
     tArrival = trainTime.format("hh:mm A");
     tMinutes = trainTime.diff(moment(), "minutes");
   } else {
 
-    // Calculate the minutes until arrival using hardcore math
-    // To calculate the minutes till arrival, take the current time in unix subtract the FirstTrain time
-    // and find the modulus between the difference and the frequency.
     var differenceTimes = moment().diff(trainTime, "minutes");
     var tRemainder = differenceTimes % tFrequency;
     tMinutes = tFrequency - tRemainder;
-    // To calculate the arrival time, add the tMinutes to the current time
     tArrival = moment().add(tMinutes, "m").format("hh:mm A");
   }
   console.log("tMinutes:", tMinutes);
